@@ -1,0 +1,107 @@
+.container {
+  width: 80%;
+  margin: auto;
+  font-family: Arial, sans-serif;
+}
+
+h2 {
+  text-align: center;
+  font-family: Arial, sans-serif;
+  color: #fff;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: #fff;
+  font-family: Arial, sans-serif;
+}
+
+table,
+th,
+td {
+  border: 1px solid #ddd;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background-color: #f4f4f4;
+}
+
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1e8e3e, #3498db);
+  font-family: Arial, sans-serif;
+}
+
+.menu {
+  background: linear-gradient(135deg, #1e8e3e, #3498db);
+  color: white;
+  padding: 10px 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  font-family: Arial, sans-serif;
+}
+
+.menu ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.menu li {
+  display: inline;
+  padding: 0 15px;
+  position: relative;
+}
+
+.menu a {
+  color: white;
+  text-decoration: none;
+  padding: 10px 0;
+  display: block;
+  border: none;
+  background: transparent;
+  transition: color 0.3s;
+  font-family: Arial, sans-serif;
+}
+
+.menu li:not(:last-child)::after {
+  content: "|";
+  color: white;
+  margin-left: 10px;
+  font-size: 24px;
+  vertical-align: middle;
+  position: absolute;
+  right: -7px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.content {
+  padding: 20px;
+  flex-grow: 1;
+  margin-top: 60px;
+  background: linear-gradient(135deg, #1e8e3e, #3498db);
+  color: #000;
+  font-family: Arial, sans-serif;
+}

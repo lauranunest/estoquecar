@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: estoque_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: estoque_oficina
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: minha_senha
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db-init:/docker-entrypoint-initdb.d 
+
+  api:
+    build:
+      context: ../backend
+    container_name: estoque_api
+    ports:
+      - "5245:5245"
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=estoque_oficina
+      - DB_USER=admin
+      - DB_PASSWORD=admin123
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+    driver: local
