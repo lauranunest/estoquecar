@@ -42,5 +42,12 @@ namespace backend.Controllers
 
             return produto;
         }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Produto>>> GetProdutos()
+        {
+            return await _context.Produtos.ToListAsync();
+        }
+
     }
 }

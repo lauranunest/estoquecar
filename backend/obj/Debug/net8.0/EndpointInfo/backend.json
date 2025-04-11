@@ -5,6 +5,38 @@
     "version": "1.0"
   },
   "paths": {
+    "/api/Dashboard/resumo-completo": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "parameters": [
+          {
+            "name": "inicio",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "fim",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/Login": {
       "post": {
         "tags": [
@@ -72,6 +104,35 @@
             }
           }
         }
+      },
+      "post": {
+        "tags": [
+          "MovimentoEstoque"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MovimentoEstoqueDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MovimentoEstoqueDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/MovimentoEstoqueDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
       }
     },
     "/api/Produtos": {
@@ -115,6 +176,42 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Produto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Produtos"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Produto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Produto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Produto"
+                  }
                 }
               }
             }
@@ -263,6 +360,35 @@
         },
         "additionalProperties": false
       },
+      "MovimentoEstoque": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "produtoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "produto": {
+            "$ref": "#/components/schemas/Produto"
+          },
+          "quantidade": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tipoMovimento": {
+            "type": "string",
+            "nullable": true
+          },
+          "dataMovimento": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
       "MovimentoEstoqueDto": {
         "type": "object",
         "properties": {
@@ -308,10 +434,6 @@
             "type": "string",
             "nullable": true
           },
-          "quantidade": {
-            "type": "integer",
-            "format": "int32"
-          },
           "preco": {
             "type": "number",
             "format": "double"
@@ -319,6 +441,13 @@
           "dataCadastro": {
             "type": "string",
             "format": "date-time"
+          },
+          "movimentosEstoque": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MovimentoEstoque"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false

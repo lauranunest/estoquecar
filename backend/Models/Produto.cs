@@ -14,13 +14,12 @@ namespace backend.Models
         [Column("descricao")]
         public string Descricao { get; set; }
 
-        [Column("quantidade")]
-        public int Quantidade { get; set; }
-
         [Column("preco")]
         public decimal Preco { get; set; }
 
         [Column("data_cadastro")]
         public DateTime DataCadastro { get; set; } = DateTime.UtcNow;
+
+        public ICollection<MovimentoEstoque>? MovimentosEstoque { get; set; }
     }
 }
