@@ -7,31 +7,48 @@
 h2 {
   text-align: center;
   font-family: Arial, sans-serif;
-  color: #fff;
+  color: #003366;
+  font-weight: 100;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
-  background-color: #fff;
   font-family: Arial, sans-serif;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
-table,
-th,
-td {
-  border: 1px solid #ddd;
+thead {
+  background-color: #003366;
+  color: white;
 }
 
-th,
-td {
-  padding: 10px;
+thead th {
+  padding: 12px 15px;
   text-align: left;
+  font-weight: normal;
+  font-size: 15px;
 }
 
-th {
-  background-color: #f4f4f4;
+tbody tr {
+  background-color: #fff;
+  transition: 0.2s ease-in-out;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f6f6f6;
+}
+
+tbody tr:hover {
+  background-color: #eaeaea;
+}
+
+tbody td {
+  padding: 12px 15px;
+  color: #444;
+  font-size: 14px;
+  border-bottom: 1px solid #eee;
 }
 
 .dashboard-container {
@@ -41,12 +58,12 @@ th {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background: linear-gradient(135deg, #1e8e3e, #3498db);
+  background-color: #f6f6f6;
   font-family: Arial, sans-serif;
 }
 
 .menu {
-  background: linear-gradient(135deg, #1e8e3e, #3498db);
+  background-color: #012345;
   color: white;
   padding: 10px 0;
   position: fixed;
@@ -96,12 +113,123 @@ th {
   top: 50%;
   transform: translateY(-50%);
 }
-
 .content {
   padding: 20px;
   flex-grow: 1;
   margin-top: 60px;
-  background: linear-gradient(135deg, #1e8e3e, #3498db);
+  padding-bottom: 40px;
+  background: repeating-linear-gradient(
+    50deg,
+    #ffffff,
+    #ffffff 5px,
+    #f6f6f6 5px,
+    #f6f6f6 6.5px
+  );
   color: #000;
   font-family: Arial, sans-serif;
+  overflow-y: auto;
+  max-height: calc(100vh - 60px);
+}
+
+.form-movimento {
+  background-color: #ffffff;
+  padding: 30px;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 51, 102, 0.1);
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto 40px auto;
+  font-family: Arial, sans-serif;
+}
+
+.form-movimento label {
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #003366;
+}
+
+.form-movimento input,
+.form-movimento select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #99b3cc;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+  background-color: #f9fbfd;
+  color: #003366;
+}
+
+.form-movimento button[type="submit"] {
+  margin-top: 20px;
+  padding: 10px 25px;
+  background-color: #00264d;
+  color: white;
+  border: 1px solid black;
+  border-radius: 0;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form-movimento button[type="submit"]:hover {
+  background-color: #001f3a;
+}
+
+.form-movimento select[name="produtoId"],
+.form-movimento select[name="tipoMovimento"],
+.form-movimento input[name="quantidade"] {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  color: #00264d;
+  border: 1px solid #aaa;
+  border-radius: 0;
+  background-color: white;
+  margin-top: 15px;
+  box-sizing: border-box;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+.form-movimento input::placeholder {
+  color: #aaa;
+}
+select {
+  color: #003366;
+}
+.select-wrapper {
+  position: relative;
+}
+
+.select-wrapper select {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  color: #003366;
+  border: 1px solid #aaa;
+  border-radius: 0;
+  background-color: white;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.select-wrapper .fake-placeholder {
+  position: absolute;
+  top: 62%;
+  left: 12px;
+  transform: translateY(-50%);
+  color: #aaa;
+  pointer-events: none;
+  font-size: 14px;
+}
+
+.form-movimento button[type="submit"]:disabled {
+  background-color: #d6d6d6;
+  border: #aaa;
+  cursor: not-allowed;
 }

@@ -15,22 +15,57 @@ export class CadastroProdutoComponent {
   produto = {
     nome: '',
     descricao: '',
-    preco: 0,
-    quantidade: 0,
+    preco: '',
   };
 
   constructor(private http: HttpClient) {}
 
+  formatarPreco() {
+    let valor = this.produto.preco.replace(/\D/g, '');
+
+    let centavos = (parseInt(valor, 10) / 100).toFixed(2);
+
+    this.produto.preco = 'R$ ' + centavos.replace('.', ',');
+  }
+
+  permitirSomenteNumeros(event: KeyboardEvent) {
+    const tecla = event.key;
+
+    if (!/^\d$/.test(tecla)) {
+      event.preventDefault();
+    }
+  }
+
   onSubmit() {
-    const url = 'http://localhost:5245/api/produtos';
-    this.http.post(url, this.produto).subscribe(
-      (response) => {
-        alert('Produto cadastrado com sucesso!');
-        this.produto = { nome: '', descricao: '', preco: 0, quantidade: 0 };
-      },
-      (error) => {
-        alert('Erro ao cadastrar produto.');
-      }
+    const precoNumerico = parseFloat(
+      this.produto.preco
+        .replace('R$', '')
+        .replace('.', '')
+        .replace(',', '.')
+        .trim()
     );
+
+    if (isNaN(precoNumerico) || precoNumerico <= 1) {
+      alert('O preço deve ser maior que R$1,00');
+      return;
+    }
+
+    const produtoParaSalvar = {
+      nome: this.produto.nome,
+      descricao: this.produto.descricao,
+      preco: precoNumerico,
+    };
+
+    this.http
+      .post('http://localhost:5245/api/produtos', produtoParaSalvar)
+      .subscribe({
+        next: () => {
+          alert('Produto cadastrado com sucesso!');
+          this.produto = { nome: '', descricao: '', preco: '' };
+        },
+        error: (err) => {
+          alert('Erro ao cadastrar produto: ' + err.message);
+        },
+      });
   }
 }

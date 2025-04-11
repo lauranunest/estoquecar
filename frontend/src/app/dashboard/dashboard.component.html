@@ -1,23 +1,49 @@
 <div class="dashboard-container">
-  <div class="menu">
-    <ul>
-      <li>
-        <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-      </li>
-      <li>
-        <a routerLink="/cadastro-produto" routerLinkActive="active"
-          >Cadastro de Produto</a
-        >
-      </li>
-      <li>
-        <a routerLink="/movimento-estoque" routerLinkActive="active"
-          >Movimento de Estoque</a
-        >
-      </li>
-    </ul>
+  <div class="dashboard-card">
+    <div class="card-icon icon-blue">
+      <i class="fas fa-box"></i>
+    </div>
+    <div class="card-content">
+      <h3>Total de Produtos</h3>
+      <div class="number">
+        <span [countUp]="resumo?.totalProdutosCadastrados || 0"></span>
+      </div>
+    </div>
   </div>
 
-  <div class="content">
-    <router-outlet></router-outlet>
+  <div class="dashboard-card">
+    <div class="card-icon icon-green">
+      <i class="fas fa-sign-in-alt"></i>
+    </div>
+    <div class="card-content">
+      <h3>Total de Entradas</h3>
+      <div class="number">
+        <span [countUp]="resumo?.totalEntradas || 0"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-card">
+    <div class="card-icon icon-red">
+      <i class="fas fa-sign-out-alt"></i>
+    </div>
+    <div class="card-content">
+      <h3>Total de Saídas</h3>
+      <div class="number">
+        <span [countUp]="resumo?.totalSaidas || 0"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-card">
+    <div class="card-icon icon-purple">
+      <i class="fas fa-boxes-stacked"></i>
+    </div>
+    <div class="card-content">
+      <h3>Produtos em Estoque</h3>
+      <div class="number">
+        <span [countUp]="resumo?.quantidadeTotalEmEstoque || 0"></span>
+      </div>
+    </div>
   </div>
 </div>

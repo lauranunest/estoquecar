@@ -5,8 +5,10 @@ body {
   margin: 0 !important;
   padding: 0;
   overflow: hidden;
-  background-color: #000;
-  color: #fff;
+  background-color: #f6f6f6;
+  color: #000;
+  font-family: Arial, sans-serif !important;
+  box-sizing: border-box;
 }
 
 .login-container {
@@ -16,44 +18,38 @@ body {
   height: 100vh;
   width: 100vw;
   position: relative;
-  background: linear-gradient(135deg, #1e8e3e, #3498db);
+  background: repeating-linear-gradient(
+    50deg,
+    #ffffff,
+    #ffffff 5px,
+    #f6f6f6 5px,
+    #f6f6f6 6.5px
+  );
   overflow: hidden;
   margin: 0;
   padding: 0;
 }
 
-.login-container::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: inherit;
-  filter: blur(15px);
-  z-index: -1;
-}
-
 .login-box {
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: #ffffff;
   padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 450px;
-  backdrop-filter: blur(10px);
-  box-sizing: border-box;
-  border: 1px solid rgba(255, 255, 255, 0.3);
   display: flex;
   flex-direction: column;
   align-items: center;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
 }
 
 h2 {
   text-align: center;
-  color: #fff;
+  color: #003366;
   margin-bottom: 20px;
-  font-family: "Arial", sans-serif;
+  font-family: Arial, sans-serif;
+  font-weight: 100;
 }
 
 form {
@@ -68,40 +64,30 @@ form {
 }
 
 label {
-  margin-bottom: 5px;
+  margin-bottom: 8px;
   font-weight: bold;
-  color: #fff;
-  font-family: "Arial", sans-serif;
+  color: #333;
+  font-family: Arial, sans-serif;
   display: block;
+  font-size: 16px;
 }
 
-.input-group input {
+.input-group input,
+input {
   width: 100%;
   padding: 15px;
   font-size: 16px;
-  border: 2px solid #fff;
+  border: 1px solid #ccc;
   border-radius: 8px;
   background-color: #fff;
   color: #000;
   box-sizing: border-box;
-}
-
-.input-group input:focus {
-  border-color: #3498db;
-  outline: none;
-}
-
-input {
-  width: 95%;
   margin-bottom: 15px;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
 }
 
+.input-group input:focus,
 input:focus {
-  border-color: #3498db;
+  border-color: #003366;
   outline: none;
 }
 
@@ -109,7 +95,7 @@ input:focus {
   padding: 12px;
   font-size: 16px;
   color: #fff;
-  background-color: #3498db;
+  background-color: #003366;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -131,4 +117,11 @@ input:focus {
   color: #2ecc71;
   text-align: center;
   margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .login-box {
+    padding: 20px;
+    max-width: 90%;
+  }
 }

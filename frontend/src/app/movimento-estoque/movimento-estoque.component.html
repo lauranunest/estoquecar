@@ -1,44 +1,76 @@
-`
 <div class="dashboard-container">
-  <div class="menu">
-    <ul>
-      <li>
-        <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-      </li>
-      <li>
-        <a routerLink="/cadastro-produto" routerLinkActive="active"
-          >Cadastro de Produto</a
-        >
-      </li>
-      <li>
-        <a routerLink="/movimento-estoque" routerLinkActive="active"
-          >Movimento de Estoque</a
-        >
-      </li>
-    </ul>
+  <div class="content">
+    <div class="container">
+      <h2>Registrar Movimento de Estoque</h2>
+
+      <form
+        (ngSubmit)="registrarMovimento()"
+        #movForm="ngForm"
+        class="form-movimento"
+      >
+        <div class="select-wrapper">
+          <select
+            [(ngModel)]="novoMovimento.produtoId"
+            name="produtoId"
+            required
+          >
+            <option *ngFor="let produto of produtos" [ngValue]="produto.id">
+              {{ produto.nome }}
+            </option>
+          </select>
+          <span class="fake-placeholder" *ngIf="!novoMovimento.produtoId"
+            >Produto</span
+          >
+        </div>
+
+        <input
+          type="number"
+          [(ngModel)]="novoMovimento.quantidade"
+          name="quantidade"
+          required
+          min="1"
+          placeholder="Quantidade"
+        />
+
+        <!-- Tipo de Movimento -->
+        <!-- Tipo de Movimento -->
+        <div class="select-wrapper">
+          <select
+            [(ngModel)]="novoMovimento.tipoMovimento"
+            name="tipoMovimento"
+            required
+          >
+            <option [ngValue]="null" disabled hidden></option>
+            <option value="entrada">Entrada</option>
+            <option value="saida">Saída</option>
+          </select>
+          <span class="fake-placeholder" *ngIf="!novoMovimento.tipoMovimento">
+            Tipo de Movimento
+          </span>
+        </div>
+
+        <button type="submit" [disabled]="!movForm.valid">Registrar</button>
+      </form>
+
+      <h2>Consulta de Movimento de Estoque</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Produto</th>
+            <th>Quantidade</th>
+            <th>Tipo</th>
+            <th>Data</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let movimento of movimentos">
+            <td>{{ movimento.nomeProduto }}</td>
+            <td>{{ movimento.quantidade }}</td>
+            <td>{{ movimento.tipoMovimento }}</td>
+            <td>{{ movimento.dataMovimento | date : "short" }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-  <div class="container">
-    <h2>Consulta de Movimento de Estoque</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Produto</th>
-          <th>Quantidade</th>
-          <th>Tipo</th>
-          <th>Data</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let movimento of movimentos">
-          <td>{{ movimento.id }}</td>
-          <td>{{ movimento.nomeProduto }}</td>
-          <td>{{ movimento.quantidade }}</td>
-          <td>{{ movimento.tipoMovimento }}</td>
-          <td>{{ movimento.dataMovimento | date : "short" }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  `
 </div>

@@ -25,7 +25,7 @@ export class LoginComponent {
       password: this.password,
     };
 
-    this.http.post('https://localhost:7024/api/Login', loginData).subscribe(
+    this.http.post('http://localhost:5245/api/login', loginData).subscribe(
       (response: any) => {
         console.log('Resposta do login:', response);
         this.successMessage = 'Login bem-sucedido!';

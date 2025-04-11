@@ -1,83 +1,49 @@
-<div class="dashboard-container">
-  <div class="menu">
-    <ul>
-      <li>
-        <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-      </li>
-      <li>
-        <a routerLink="/cadastro-produto" routerLinkActive="active"
-          >Cadastro de Produto</a
-        >
-      </li>
-      <li>
-        <a routerLink="/movimento-estoque" routerLinkActive="active"
-          >Movimento de Estoque</a
-        >
-      </li>
-    </ul>
-  </div>
+<div class="form-container">
+  <h2>Cadastro de Produto</h2>
 
-  <div class="content">
-    <router-outlet></router-outlet>
-    <div class="cadastro-produto">
-      <h2>Cadastro de Produto</h2>
-
-      <form (ngSubmit)="onSubmit()" #produtoForm="ngForm">
-        <div class="form-group">
-          <label for="nome">Nome do Produto</label>
-          <input
-            type="text"
-            id="nome"
-            name="nome"
-            [(ngModel)]="produto.nome"
-            required
-            class="form-control"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="descricao">Descrição</label>
-          <textarea
-            id="descricao"
-            name="descricao"
-            [(ngModel)]="produto.descricao"
-            required
-            class="form-control"
-          ></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="preco">Preço</label>
-          <input
-            type="number"
-            id="preco"
-            name="preco"
-            [(ngModel)]="produto.preco"
-            required
-            class="form-control"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="quantidade">Quantidade</label>
-          <input
-            type="number"
-            id="quantidade"
-            name="quantidade"
-            [(ngModel)]="produto.quantidade"
-            required
-            class="form-control"
-          />
-        </div>
-
-        <button
-          type="submit"
-          class="btn btn-primary"
-          [disabled]="!produtoForm.form.valid"
-        >
-          Cadastrar
-        </button>
-      </form>
+  <form (ngSubmit)="onSubmit()" #produtoForm="ngForm">
+    <div class="form-group">
+      <label class="preco-label" for="nome">Nome do Produto</label>
+      <input
+        type="text"
+        id="nome"
+        name="nome"
+        [(ngModel)]="produto.nome"
+        required
+        class="form-control"
+      />
     </div>
-  </div>
+
+    <div class="form-group">
+      <label class="preco-label" for="descricao">Descrição</label>
+      <textarea
+        id="descricao"
+        name="descricao"
+        [(ngModel)]="produto.descricao"
+        required
+        class="form-control"
+      ></textarea>
+    </div>
+
+    <label class="preco-label" for="preco">Preço Unitário</label>
+    <input
+      type="text"
+      id="preco"
+      name="preco"
+      [(ngModel)]="produto.preco"
+      required
+      class="form-control"
+      placeholder="R$ 0,00"
+      (input)="formatarPreco()"
+      (keypress)="permitirSomenteNumeros($event)"
+    />
+
+    <button
+      type="submit"
+      class="btn btn-primary"
+      [disabled]="!produtoForm.form.valid"
+    >
+      Cadastrar
+    </button>
+  </form>
 </div>
