@@ -32,8 +32,6 @@
           placeholder="Quantidade"
         />
 
-        <!-- Tipo de Movimento -->
-        <!-- Tipo de Movimento -->
         <div class="select-wrapper">
           <select
             [(ngModel)]="novoMovimento.tipoMovimento"
@@ -44,9 +42,9 @@
             <option value="entrada">Entrada</option>
             <option value="saida">Saída</option>
           </select>
-          <span class="fake-placeholder" *ngIf="!novoMovimento.tipoMovimento">
-            Tipo de Movimento
-          </span>
+          <span class="fake-placeholder" *ngIf="!novoMovimento.tipoMovimento"
+            >Tipo de Movimento</span
+          >
         </div>
 
         <button type="submit" [disabled]="!movForm.valid">Registrar</button>
@@ -57,7 +55,10 @@
         <thead>
           <tr>
             <th>Produto</th>
+            <th>Descrição</th>
+            <th>Preço Unitário</th>
             <th>Quantidade</th>
+            <th>Preço Total</th>
             <th>Tipo</th>
             <th>Data</th>
           </tr>
@@ -65,12 +66,49 @@
         <tbody>
           <tr *ngFor="let movimento of movimentos">
             <td>{{ movimento.nomeProduto }}</td>
+            <td>
+              <button (click)="abrirDescricao(movimento.descricaoProduto)">
+                Ver descrição
+              </button>
+            </td>
+            <td>{{ formatarPreco(movimento.precoUnitario) }}</td>
             <td>{{ movimento.quantidade }}</td>
-            <td>{{ movimento.tipoMovimento }}</td>
+            <td>{{ formatarPreco(movimento.precoTotal) }}</td>
+            <td>
+              {{
+                movimento.tipoMovimento === "Saida"
+                  ? "Saída"
+                  : movimento.tipoMovimento
+              }}
+            </td>
             <td>{{ movimento.dataMovimento | date : "short" }}</td>
           </tr>
         </tbody>
       </table>
+
+      <div class="pagination">
+        <button
+          (click)="alterarPagina(paginaAtual - 1)"
+          [disabled]="paginaAtual <= 1"
+        >
+          Anterior
+        </button>
+        <span>Página {{ paginaAtual }} de {{ totalPaginas }}</span>
+        <button
+          (click)="alterarPagina(paginaAtual + 1)"
+          [disabled]="paginaAtual >= totalPaginas"
+        >
+          Próximo
+        </button>
+      </div>
     </div>
+  </div>
+</div>
+
+<div class="modal-descricao" *ngIf="descricaoAberta">
+  <div class="modal-conteudo">
+    <h3>Descrição do Produto</h3>
+    <textarea readonly>{{ descricaoSelecionada }}</textarea>
+    <button (click)="fecharDescricao()">Fechar</button>
   </div>
 </div>

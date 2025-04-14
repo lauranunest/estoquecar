@@ -20,23 +20,35 @@ namespace backend.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MovimentoEstoqueDto>>> GetMovimentosEstoque()
+        public async Task<ActionResult<IEnumerable<MovimentoEstoqueDto>>> GetMovimentosEstoque(int page = 1, int itensPorPagina = 10)
         {
+            var totalMovimentos = await _context.MovimentosEstoque.CountAsync();
+
             var movimentos = await _context.MovimentosEstoque
                 .Include(m => m.Produto)
-                .OrderByDescending(m => m.DataMovimento) 
+                .OrderByDescending(m => m.DataMovimento)
+                .Skip((page - 1) * itensPorPagina)  // Usando o novo parâmetro 'itensPorPagina'
+                .Take(itensPorPagina)  // Limita o número de itens retornados
                 .Select(m => new MovimentoEstoqueDto
                 {
                     Id = m.Id,
                     ProdutoId = m.ProdutoId,
                     NomeProduto = m.Produto.Nome,
+                    DescricaoProduto = m.Produto.Descricao,
+                    PrecoUnitario = m.Produto.Preco,
                     Quantidade = m.Quantidade,
-                    TipoMovimento = m.TipoMovimento,
+                    TipoMovimento = char.ToUpper(m.TipoMovimento[0]) + m.TipoMovimento.Substring(1).ToLower(),
                     DataMovimento = m.DataMovimento
                 })
                 .ToListAsync();
 
-            return Ok(movimentos);
+            return Ok(new
+            {
+                totalItems = totalMovimentos,
+                currentPage = page,
+                totalPages = (int)Math.Ceiling(totalMovimentos / (double)itensPorPagina),
+                data = movimentos
+            });
         }
 
         [HttpPost]

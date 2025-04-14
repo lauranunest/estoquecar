@@ -19,6 +19,13 @@ export class MovimentoEstoqueComponent implements OnInit {
     tipoMovimento: '',
     quantidade: null,
   };
+  descricaoAberta = false;
+  descricaoSelecionada: string | null = null;
+
+  // Paginação
+  paginaAtual: number = 1;
+  totalPaginas: number = 1;
+  itensPorPagina: number = 5;
 
   constructor(private http: HttpClient) {}
 
@@ -37,9 +44,13 @@ export class MovimentoEstoqueComponent implements OnInit {
 
   carregarMovimentos() {
     this.http
-      .get<any[]>('http://localhost:5245/api/movimentoestoque')
-      .subscribe((data) => {
-        this.movimentos = data;
+      .get<any[]>(
+        `http://localhost:5245/api/movimentoestoque?page=${this.paginaAtual}&itensPorPagina=${this.itensPorPagina}`
+      )
+      .subscribe((data: any) => {
+        console.log(data);
+        this.movimentos = data.data; // <- AQUI precisa ser `data.data`
+        this.totalPaginas = data.totalPages;
       });
   }
 
@@ -81,5 +92,26 @@ export class MovimentoEstoqueComponent implements OnInit {
           alert(error.error);
         },
       });
+  }
+
+  alterarPagina(pagina: number) {
+    if (pagina > 0 && pagina <= this.totalPaginas) {
+      this.paginaAtual = pagina;
+      this.carregarMovimentos();
+    }
+  }
+
+  abrirDescricao(descricao: string) {
+    this.descricaoSelecionada = descricao;
+    this.descricaoAberta = true;
+  }
+
+  fecharDescricao() {
+    this.descricaoAberta = false;
+    this.descricaoSelecionada = '';
+  }
+
+  formatarPreco(valor: number): string {
+    return valor.toFixed(2).replace('.', ',');
   }
 }
