@@ -1,0 +1,64 @@
+<div class="form-container">
+  <h2>Cadastro de Usuário</h2>
+
+  <div class="form-group">
+    <label class="label" for="nome">Nome</label>
+    <input
+      type="text"
+      id="nome"
+      class="form-control"
+      [(ngModel)]="nome"
+      (ngModelChange)="validarNome()"
+    />
+    <p *ngIf="nomeInvalido" style="color: red">
+      O nome não pode conter números.
+    </p>
+  </div>
+
+  <div class="form-group">
+    <label class="label" for="email">E-mail</label>
+    <input
+      type="email"
+      id="email"
+      class="form-control"
+      [(ngModel)]="email"
+      (ngModelChange)="validarEmail()"
+    />
+    <p *ngIf="emailInvalido" style="color: red">
+      O e-mail deve conter "&#64;".
+    </p>
+  </div>
+
+  <div class="form-group">
+    <label class="label" for="username">Usuário</label>
+    <input
+      type="text"
+      id="username"
+      class="form-control"
+      [(ngModel)]="username"
+    />
+  </div>
+
+  <div class="form-group">
+    <label class="label" for="senha">Senha</label>
+    <input
+      type="password"
+      id="senha"
+      class="form-control"
+      [(ngModel)]="senha"
+    />
+  </div>
+
+  <button
+    (click)="cadastrar()"
+    [disabled]="
+      !nome || !email || !username || !senha || nomeInvalido || emailInvalido
+    "
+  >
+    Cadastrar
+  </button>
+
+  <p *ngIf="mensagem" style="margin-top: 12px; color: #003366">
+    {{ mensagem }}
+  </p>
+</div>

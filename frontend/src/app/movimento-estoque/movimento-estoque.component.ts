@@ -22,10 +22,10 @@ export class MovimentoEstoqueComponent implements OnInit {
   descricaoAberta = false;
   descricaoSelecionada: string | null = null;
 
-  // Paginação
   paginaAtual: number = 1;
   totalPaginas: number = 1;
   itensPorPagina: number = 5;
+  paginasVisiveis: number[] = [];
 
   constructor(private http: HttpClient) {}
 
@@ -95,10 +95,36 @@ export class MovimentoEstoqueComponent implements OnInit {
   }
 
   alterarPagina(pagina: number) {
-    if (pagina > 0 && pagina <= this.totalPaginas) {
+    if (pagina >= 1 && pagina <= this.totalPaginas) {
       this.paginaAtual = pagina;
       this.carregarMovimentos();
     }
+  }
+
+  atualizarPaginas() {
+    const paginas: number[] = [];
+
+    const mostrarPaginas = 3;
+    const inicio = Math.max(1, this.paginaAtual - 1);
+    const fim = Math.min(this.totalPaginas, this.paginaAtual + 1);
+
+    for (let i = inicio; i <= fim; i++) {
+      paginas.push(i);
+    }
+
+    if (fim < this.totalPaginas) {
+      paginas.push(-1);
+      paginas.push(this.totalPaginas);
+    }
+
+    if (inicio > 2) {
+      paginas.unshift(-1);
+      paginas.unshift(1);
+    } else if (inicio === 2) {
+      paginas.unshift(1);
+    }
+
+    this.paginasVisiveis = paginas;
   }
 
   abrirDescricao(descricao: string) {

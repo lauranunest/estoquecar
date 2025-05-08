@@ -67,7 +67,10 @@
           <tr *ngFor="let movimento of movimentos">
             <td>{{ movimento.nomeProduto }}</td>
             <td>
-              <button (click)="abrirDescricao(movimento.descricaoProduto)">
+              <button
+                class="pagination-button"
+                (click)="abrirDescricao(movimento.descricaoProduto)"
+              >
                 Ver descrição
               </button>
             </td>
@@ -88,18 +91,20 @@
 
       <div class="pagination">
         <button
+          class="pagination-button"
           (click)="alterarPagina(paginaAtual - 1)"
           [disabled]="paginaAtual <= 1"
         >
           Anterior
         </button>
-        <span>Página {{ paginaAtual }} de {{ totalPaginas }}</span>
         <button
+          class="pagination-button"
           (click)="alterarPagina(paginaAtual + 1)"
           [disabled]="paginaAtual >= totalPaginas"
         >
           Próximo
         </button>
+        <span>Página {{ paginaAtual }} de {{ totalPaginas }}</span>
       </div>
     </div>
   </div>
