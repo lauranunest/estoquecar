@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
@@ -48,8 +48,12 @@ export class MovimentoEstoqueComponent implements OnInit {
         `http://localhost:5245/api/movimentoestoque?page=${this.paginaAtual}&itensPorPagina=${this.itensPorPagina}`
       )
       .subscribe((data: any) => {
-        console.log(data);
-        this.movimentos = data.data; // <- AQUI precisa ser `data.data`
+        this.movimentos = data.data.map((movimento: any) => {
+          movimento.dataMovimento = this.formatarDataMovimento(
+            movimento.dataMovimento
+          );
+          return movimento;
+        });
         this.totalPaginas = data.totalPages;
       });
   }
@@ -139,5 +143,11 @@ export class MovimentoEstoqueComponent implements OnInit {
 
   formatarPreco(valor: number): string {
     return valor.toFixed(2).replace('.', ',');
+  }
+
+  formatarDataMovimento(data: string): string {
+    const [mes, dia, ano, hora, minuto] = data.split(/[\/ :]/);
+
+    return ` ${mes}/${dia}/${ano} ${hora}:${minuto}`;
   }
 }

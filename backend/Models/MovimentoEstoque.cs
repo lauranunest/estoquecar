@@ -10,19 +10,32 @@ namespace backend.Models
         public int Id { get; set; }
 
         [Column("produto_id")]
-        public int ProdutoId { get; set; } 
+        public int ProdutoId { get; set; }
 
         [ForeignKey("ProdutoId")]
-        public Produto Produto { get; set; } 
+        public Produto Produto { get; set; }
 
         [Column("quantidade")]
         public int Quantidade { get; set; }
 
-        [Column("tipo_movimento")] 
+        [Column("tipo_movimento")]
         public string TipoMovimento { get; set; }
 
         [Column("data_movimento")]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime DataMovimento { get; set; } = DateTime.UtcNow;
+        public DateTime DataMovimento { get; set; } = GetBrasiliaTime();
+
+        private static DateTime GetBrasiliaTime()
+        {
+            try
+            {
+                return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow,
+                    TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"));
+            }
+            catch
+            {
+                return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow,
+                    TimeZoneInfo.FindSystemTimeZoneById("America/Sao_Paulo"));
+            }
+        }
     }
 }

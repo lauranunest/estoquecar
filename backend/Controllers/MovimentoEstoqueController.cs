@@ -24,23 +24,26 @@ namespace backend.Controllers
         {
             var totalMovimentos = await _context.MovimentosEstoque.CountAsync();
 
-            var movimentos = await _context.MovimentosEstoque
+            var movimentosBrutos = await _context.MovimentosEstoque
                 .Include(m => m.Produto)
                 .OrderByDescending(m => m.DataMovimento)
-                .Skip((page - 1) * itensPorPagina)  // Usando o novo parâmetro 'itensPorPagina'
-                .Take(itensPorPagina)  // Limita o número de itens retornados
-                .Select(m => new MovimentoEstoqueDto
-                {
-                    Id = m.Id,
-                    ProdutoId = m.ProdutoId,
-                    NomeProduto = m.Produto.Nome,
-                    DescricaoProduto = m.Produto.Descricao,
-                    PrecoUnitario = m.Produto.Preco,
-                    Quantidade = m.Quantidade,
-                    TipoMovimento = char.ToUpper(m.TipoMovimento[0]) + m.TipoMovimento.Substring(1).ToLower(),
-                    DataMovimento = m.DataMovimento
-                })
+                .Skip((page - 1) * itensPorPagina)
+                .Take(itensPorPagina)
                 .ToListAsync();
+
+            var fusoBrasil = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
+
+            var movimentos = movimentosBrutos.Select(m => new MovimentoEstoqueDto
+            {
+                Id = m.Id,
+                ProdutoId = m.ProdutoId,
+                NomeProduto = m.Produto.Nome,
+                DescricaoProduto = m.Produto.Descricao,
+                PrecoUnitario = m.Produto.Preco,
+                Quantidade = m.Quantidade,
+                TipoMovimento = char.ToUpper(m.TipoMovimento[0]) + m.TipoMovimento.Substring(1).ToLower(),
+                DataMovimento = TimeZoneInfo.ConvertTimeFromUtc(m.DataMovimento, fusoBrasil).ToString("dd/MM/yyyy HH:mm")
+            }).ToList();
 
             return Ok(new
             {
@@ -75,7 +78,7 @@ namespace backend.Controllers
                 ProdutoId = movimentoDto.ProdutoId,
                 Quantidade = movimentoDto.Quantidade,
                 TipoMovimento = movimentoDto.TipoMovimento,
-                DataMovimento = movimentoDto.DataMovimento
+                DataMovimento = DateTime.UtcNow
             };
 
             _context.MovimentosEstoque.Add(movimento);

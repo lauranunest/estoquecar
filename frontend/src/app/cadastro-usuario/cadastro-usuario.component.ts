@@ -23,7 +23,7 @@ export class CadastroUsuarioComponent {
   constructor(private http: HttpClient) {}
 
   validarNome(): void {
-    this.nomeInvalido = /\d/.test(this.nome); // true se contiver número
+    this.nomeInvalido = /\d/.test(this.nome);
   }
 
   validarEmail(): void {

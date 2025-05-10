@@ -215,3 +215,17 @@ button:disabled {
   margin-bottom: 4px;
   display: block;
 }
+.logout-button {
+  background: transparent;
+  color: white;
+  border: none;
+  padding: 10px 0;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: Arial, sans-serif;
+  transition: color 0.3s;
+}
+
+.logout-button:hover {
+  color: #cccccc;
+}
