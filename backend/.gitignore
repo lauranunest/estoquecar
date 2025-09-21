@@ -1,0 +1,22 @@
+# Pastas do Visual Studio
+.vs/
+obj/
+bin/
+
+# Arquivos do Copilot
+*.vsidx
+
+# Outros arquivos temporários
+*.cache
+*.user
+*.suo
+*.log
+
+# Node / Angular
+node_modules/
+dist/
+*.map
+
+# IDEs
+.vscode/
+.idea/

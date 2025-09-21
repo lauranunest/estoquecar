@@ -1,7 +1,0 @@
-C:\Users\laura\source\repos\controle-de-estoque\backend\obj\Debug\net7.0\backend.csproj.AssemblyReference.cache
-C:\Users\laura\source\repos\controle-de-estoque\backend\obj\Debug\net7.0\backend.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\laura\source\repos\controle-de-estoque\backend\obj\Debug\net7.0\backend.AssemblyInfoInputs.cache
-C:\Users\laura\source\repos\controle-de-estoque\backend\obj\Debug\net7.0\backend.AssemblyInfo.cs
-C:\Users\laura\source\repos\controle-de-estoque\backend\obj\Debug\net7.0\backend.csproj.CoreCompileInputs.cache
-C:\Users\laura\source\repos\controle-de-estoque\backend\obj\Debug\net7.0\backend.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\laura\source\repos\controle-de-estoque\backend\obj\Debug\net7.0\backend.MvcApplicationPartsAssemblyInfo.cache
