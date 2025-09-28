@@ -7,19 +7,19 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.SetMinimumLevel(LogLevel.Debug);
 
-var host = Environment.GetEnvironmentVariable("DB_HOST");
-var port = Environment.GetEnvironmentVariable("DB_PORT");
-var database = Environment.GetEnvironmentVariable("DB_NAME");
-var user = Environment.GetEnvironmentVariable("DB_USER");
-var password = Environment.GetEnvironmentVariable("DB_PASS");
+var host = Environment.GetEnvironmentVariable("DB_HOST") ?? "aws-1-sa-east-1.pooler.supabase.com";
+var port = Environment.GetEnvironmentVariable("DB_PORT") ?? "6543"; 
+var database = Environment.GetEnvironmentVariable("DB_NAME") ?? "postgres";
+var user = Environment.GetEnvironmentVariable("DB_USER") ?? "postgres.cortlcpcjkqfjchfwdkp";
+var password = Environment.GetEnvironmentVariable("DB_PASS") ?? "YOUR_PASSWORD";
 
-var connectionString = $"Host={host};Port={port};Database={database};Username={user};Password={password}";
+var connectionString = $"Host={host};Port={port};Database={database};Username={user};Password={password};Pooling=true;Maximum Pool Size=50;Trust Server Certificate=true;";
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString, o =>
+    options.UseNpgsql(connectionString, npgsqlOptions =>
     {
-        o.CommandTimeout(60);    
-        o.EnableRetryOnFailure(5); 
+        npgsqlOptions.CommandTimeout(60);     
+        npgsqlOptions.EnableRetryOnFailure(5); 
     })
 );
 
