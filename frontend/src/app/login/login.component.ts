@@ -25,18 +25,20 @@ export class LoginComponent {
       password: this.password,
     };
 
-    this.http.post('http://localhost:5245/api/login', loginData).subscribe(
-      (response: any) => {
-        this.successMessage = 'Login bem-sucedido!';
-        this.errorMessage = '';
-        this.router.navigate(['/dashboard']);
-      },
-      (error) => {
-        this.errorMessage =
-          'Erro ao fazer login. Verifique o usuário e a senha.';
-        this.successMessage = '';
-        console.error(error);
-      }
-    );
+    this.http
+      .post('https://estoquecar.onrender.com/api/usuario/api/login', loginData)
+      .subscribe(
+        (response: any) => {
+          this.successMessage = 'Login bem-sucedido!';
+          this.errorMessage = '';
+          this.router.navigate(['/dashboard']);
+        },
+        (error) => {
+          this.errorMessage =
+            'Erro ao fazer login. Verifique o usuário e a senha.';
+          this.successMessage = '';
+          console.error(error);
+        }
+      );
   }
 }

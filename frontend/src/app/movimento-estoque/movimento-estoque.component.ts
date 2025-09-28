@@ -36,7 +36,7 @@ export class MovimentoEstoqueComponent implements OnInit {
 
   carregarProdutos() {
     this.http
-      .get<any[]>('http://localhost:5245/api/produtos')
+      .get<any[]>('https://estoquecar.onrender.com/api/usuario/api/produtos')
       .subscribe((data) => {
         this.produtos = data;
       });
@@ -45,7 +45,7 @@ export class MovimentoEstoqueComponent implements OnInit {
   carregarMovimentos() {
     this.http
       .get<any[]>(
-        `http://localhost:5245/api/movimentoestoque?page=${this.paginaAtual}&itensPorPagina=${this.itensPorPagina}`
+        `https://estoquecar.onrender.com/api/usuario/api/movimentoestoque?page=${this.paginaAtual}&itensPorPagina=${this.itensPorPagina}`
       )
       .subscribe((data: any) => {
         this.movimentos = data.data.map((movimento: any) => {
@@ -80,7 +80,7 @@ export class MovimentoEstoqueComponent implements OnInit {
 
     this.http
       .post(
-        'http://localhost:5245/api/movimentoestoque',
+        'https://estoquecar.onrender.com/api/usuario/api/movimentoestoque',
         movimentoParaRegistrar
       )
       .subscribe({

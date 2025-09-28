@@ -1,18 +1,28 @@
 <div class="form-container">
-  <h2>Cadastro de Usuário</h2>
+  <h2>Usuários</h2>
 
-  <div class="form-group">
+  <!-- Campo Nome -->
+  <div class="form-group" style="position: relative">
     <label class="label" for="nome">Nome</label>
     <input
       type="text"
       id="nome"
       class="form-control"
       [(ngModel)]="nome"
-      (ngModelChange)="validarNome()"
+      (ngModelChange)="buscarPorNome($event)"
     />
     <p *ngIf="nomeInvalido" style="color: red">
       O nome não pode conter números.
     </p>
+
+    <!-- Lista suspensa -->
+    <div class="search-results" *ngIf="usuariosFiltrados.length > 0">
+      <ul>
+        <li *ngFor="let u of usuariosFiltrados" (click)="selecionarUsuario(u)">
+          {{ u.name }} ({{ u.username }})
+        </li>
+      </ul>
+    </div>
   </div>
 
   <div class="form-group">
@@ -50,12 +60,23 @@
   </div>
 
   <button
-    (click)="cadastrar()"
+    *ngIf="!usuarioSelecionado"
+    (click)="criar()"
     [disabled]="
       !nome || !email || !username || !senha || nomeInvalido || emailInvalido
     "
   >
     Cadastrar
+  </button>
+
+  <button
+    *ngIf="usuarioSelecionado"
+    (click)="atualizar(usuarioSelecionado.id)"
+    [disabled]="
+      !nome || !email || !username || !senha || nomeInvalido || emailInvalido
+    "
+  >
+    Atualizar
   </button>
 
   <p *ngIf="mensagem" style="margin-top: 12px; color: #003366">

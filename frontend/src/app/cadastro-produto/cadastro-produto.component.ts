@@ -57,7 +57,7 @@ export class CadastroProdutoComponent {
     };
 
     this.http
-      .post('http://localhost:5245/api/produtos', produtoParaSalvar)
+      .post('https://estoquecar.onrender.com/api/usuario/api/produtos', produtoParaSalvar)
       .subscribe({
         next: () => {
           alert('Produto cadastrado com sucesso!');

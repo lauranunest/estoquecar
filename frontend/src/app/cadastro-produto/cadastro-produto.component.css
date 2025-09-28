@@ -101,13 +101,7 @@ button,
   border-top: 100px;
   padding: 20px;
   flex-grow: 1;
-  background: repeating-linear-gradient(
-    50deg,
-    #ffffff,
-    #ffffff 5px,
-    #f6f6f6 5px,
-    #f6f6f6 6.5px
-  );
+  background: repeating-linear-gradient(50deg, #ffffff, #ffffff 5px, #f6f6f6 5px, #f6f6f6 6.5px);
   color: #000;
   font-family: Arial, sans-serif;
 }
@@ -188,7 +182,6 @@ button:disabled {
     background-color: #ffffff;
   }
 }
-
 .form-container {
   background-color: #ffffff;
   border-radius: 8px;
@@ -210,9 +203,9 @@ button:disabled {
   font-size: 16px;
 }
 
-.label {
+.preco-label {
   font-size: 12px;
   color: #888;
   margin-bottom: 4px;
   display: block;
-}
+}/*# sourceMappingURL=cadastro-produto.component.css.map */

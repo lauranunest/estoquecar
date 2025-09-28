@@ -33,9 +33,12 @@ export class DashboardComponent implements OnInit {
     if (this.filtro.fim) params.fim = this.filtro.fim;
 
     this.http
-      .get<any>('http://localhost:5245/api/dashboard/resumo-completo', {
-        params,
-      })
+      .get<any>(
+        'https://estoquecar.onrender.com/api/usuario/api/dashboard/resumo-completo',
+        {
+          params,
+        }
+      )
       .subscribe((data) => {
         this.resumo = data;
       });
