@@ -48,7 +48,7 @@ export class UsuarioComponent implements OnInit {
       senha: this.senha,
     };
     this.http
-      .post('https://estoquecar.onrender.com/api/usuario/api/usuario', usuario)
+      .post('https://estoquecar.onrender.com/api/usuario', usuario)
       .subscribe(
         (res: any) => {
           this.mensagem = res.mensagem;
@@ -62,7 +62,7 @@ export class UsuarioComponent implements OnInit {
   // READ
   listarUsuarios(): void {
     this.http
-      .get<any[]>('https://estoquecar.onrender.com/api/usuario/api/usuario')
+      .get<any[]>('https://estoquecar.onrender.com/api/usuario')
       .subscribe((res) => {
         this.usuarios = res;
       });
@@ -76,9 +76,7 @@ export class UsuarioComponent implements OnInit {
 
     // Faz requisição GET para o backend passando o nome como query
     this.http
-      .get<any[]>(
-        `https://estoquecar.onrender.com/api/usuario/api/usuario?nome=${nome}`
-      )
+      .get<any[]>(`https://estoquecar.onrender.com/api/usuario?nome=${nome}`)
       .subscribe(
         (res) => {
           this.usuariosFiltrados = res;
@@ -102,7 +100,7 @@ export class UsuarioComponent implements OnInit {
 
   buscar(id: number): void {
     this.http
-      .get(`https://estoquecar.onrender.com/api/usuario/api/usuario/${id}`)
+      .get(`https://estoquecar.onrender.com/api/usuario/${id}`)
       .subscribe((res) => {
         this.usuarioSelecionado = res;
       });
@@ -117,10 +115,7 @@ export class UsuarioComponent implements OnInit {
       senha: this.senha,
     };
     this.http
-      .put(
-        `https://estoquecar.onrender.com/api/usuario/api/usuario/${id}`,
-        usuario
-      )
+      .put(`https://estoquecar.onrender.com/api/usuario/${id}`, usuario)
       .subscribe((res: any) => {
         this.mensagem = res.mensagem;
         this.listarUsuarios();
@@ -130,7 +125,7 @@ export class UsuarioComponent implements OnInit {
   // DELETE
   deletar(id: number): void {
     this.http
-      .delete(`https://estoquecar.onrender.com/api/usuario/api/usuario/${id}`)
+      .delete(`https://estoquecar.onrender.com/api/usuario/${id}`)
       .subscribe((res: any) => {
         this.mensagem = res.mensagem;
         this.listarUsuarios();

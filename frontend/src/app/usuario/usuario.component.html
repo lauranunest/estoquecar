@@ -79,6 +79,14 @@
     Atualizar
   </button>
 
+  <button
+    *ngIf="usuarioSelecionado"
+    (click)="deletar(usuarioSelecionado.id)"
+    style="margin-top: 10px; background-color: red; color: white; width: 100%"
+  >
+    Excluir
+  </button>
+
   <p *ngIf="mensagem" style="margin-top: 12px; color: #003366">
     {{ mensagem }}
   </p>

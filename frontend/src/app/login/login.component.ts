@@ -26,7 +26,7 @@ export class LoginComponent {
     };
 
     this.http
-      .post('https://estoquecar.onrender.com/api/usuario/api/login', loginData)
+      .post('https://estoquecar.onrender.com/api/login', loginData)
       .subscribe(
         (response: any) => {
           this.successMessage = 'Login bem-sucedido!';

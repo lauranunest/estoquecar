@@ -34,7 +34,7 @@ export class DashboardComponent implements OnInit {
 
     this.http
       .get<any>(
-        'https://estoquecar.onrender.com/api/usuario/api/dashboard/resumo-completo',
+        'https://estoquecar.onrender.com/api/dashboard/resumo-completo',
         {
           params,
         }
