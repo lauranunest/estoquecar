@@ -17,37 +17,57 @@ namespace backend.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Produto>> PostProduto(Produto produto)
+        public async Task<IActionResult> Criar([FromBody] Produto produto)
         {
-            if (produto == null)
-            {
-                return BadRequest("Dados inválidos.");
-            }
+            if (produto == null) return BadRequest(new { mensagem = "Dados inválidos." });
 
             _context.Produtos.Add(produto);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProduto", new { id = produto.Id }, produto);
+            return Ok(new { mensagem = "Produto cadastrado com sucesso!" });
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Produto>> GetProduto(int id)
+        public async Task<IActionResult> Buscar(int id)
         {
             var produto = await _context.Produtos.FindAsync(id);
+            if (produto == null) return NotFound(new { mensagem = "Produto não encontrado." });
 
-            if (produto == null)
-            {
-                return NotFound();
-            }
-
-            return produto;
+            return Ok(produto);
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Produto>>> GetProdutos()
+        public async Task<IActionResult> Listar()
         {
-            return await _context.Produtos.ToListAsync();
+            var produtos = await _context.Produtos.ToListAsync();
+            return Ok(produtos);
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Atualizar(int id, [FromBody] Produto dto)
+        {
+            var produto = await _context.Produtos.FindAsync(id);
+            if (produto == null) return NotFound(new { mensagem = "Produto não encontrado." });
+
+            produto.Nome = dto.Nome;
+            produto.Descricao = dto.Descricao;
+            produto.Preco = dto.Preco;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { mensagem = "Produto atualizado com sucesso!" });
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Deletar(int id)
+        {
+            var produto = await _context.Produtos.FindAsync(id);
+            if (produto == null) return NotFound(new { mensagem = "Produto não encontrado." });
+
+            _context.Produtos.Remove(produto);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { mensagem = "Produto deletado com sucesso!" });
+        }
     }
 }
