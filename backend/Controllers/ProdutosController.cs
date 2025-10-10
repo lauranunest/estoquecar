@@ -69,5 +69,24 @@ namespace backend.Controllers
 
             return Ok(new { mensagem = "Produto deletado com sucesso!" });
         }
+
+        [HttpGet("buscar")]
+        public async Task<IActionResult> BuscarPorNome([FromQuery] string nome)
+        {
+            if (string.IsNullOrWhiteSpace(nome))
+                return BadRequest(new { mensagem = "O nome do produto é obrigatório." });
+
+            // Busca sensitiva (case-sensitive)
+            var produtos = await _context.Produtos
+                .Where(p => p.Nome.Contains(nome))
+                .ToListAsync();
+
+            if (produtos.Count == 0)
+                return NotFound(new { mensagem = "Nenhum produto encontrado com esse nome." });
+
+            return Ok(produtos);
+        }
+
+
     }
 }
