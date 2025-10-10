@@ -75,10 +75,8 @@ namespace backend.Controllers
         {
             if (string.IsNullOrWhiteSpace(nome))
                 return BadRequest(new { mensagem = "O nome do produto é obrigatório." });
-
-            // Busca sensitiva (case-sensitive)
             var produtos = await _context.Produtos
-                .Where(p => p.Nome.Contains(nome))
+                .Where(p => p.Nome.ToLower().Contains(nome.ToLower()))
                 .ToListAsync();
 
             if (produtos.Count == 0)
@@ -86,6 +84,7 @@ namespace backend.Controllers
 
             return Ok(produtos);
         }
+
 
 
     }
