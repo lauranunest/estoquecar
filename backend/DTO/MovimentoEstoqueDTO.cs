@@ -11,5 +11,6 @@
         public int Quantidade { get; set; }
         public string TipoMovimento { get; set; }
         public string? DataMovimento { get; set; }
+
     }
 }

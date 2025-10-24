@@ -20,13 +20,94 @@ namespace backend.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MovimentoEstoqueDto>>> GetMovimentosEstoque(int page = 1, int itensPorPagina = 10)
+        public async Task<ActionResult<IEnumerable<MovimentoEstoqueDto>>> GetMovimentosEstoque(
+    int page = 1,
+    int itensPorPagina = 10,
+    string? sortColumn = null,
+    string? sortOrder = "asc",
+    string? nomeProduto = null,
+    string? descricao = null,
+    string? tipoMovimento = null,
+    string? data = null,
+    string? quantidade = null,
+    string? precoUnitario = null,
+    string? precoTotal = null
+)
         {
-            var totalMovimentos = await _context.MovimentosEstoque.CountAsync();
-
-            var movimentosBrutos = await _context.MovimentosEstoque
+            var query = _context.MovimentosEstoque
                 .Include(m => m.Produto)
-                .OrderByDescending(m => m.DataMovimento)
+                .AsQueryable();
+
+            // 🔍 Filtros (case-insensitive)
+            if (!string.IsNullOrWhiteSpace(nomeProduto))
+                query = query.Where(m => EF.Functions.ILike(m.Produto.Nome, $"%{nomeProduto}%"));
+
+            if (!string.IsNullOrWhiteSpace(descricao))
+                query = query.Where(m => EF.Functions.ILike(m.Produto.Descricao, $"%{descricao}%"));
+
+            if (!string.IsNullOrWhiteSpace(tipoMovimento))
+                query = query.Where(m => EF.Functions.ILike(m.TipoMovimento, $"%{tipoMovimento}%"));
+
+            if (!string.IsNullOrWhiteSpace(data))
+                query = query.Where(m => m.DataMovimento.ToString("dd/MM/yyyy").Contains(data));
+
+            if (!string.IsNullOrWhiteSpace(quantidade))
+                query = query.Where(m => m.Quantidade.ToString().Contains(quantidade));
+
+            // 🆕 Filtro por preço unitário
+            if (!string.IsNullOrWhiteSpace(precoUnitario))
+                query = query.Where(m => m.Produto.Preco.ToString().Contains(precoUnitario));
+
+            // 🆕 Filtro por preço total
+            if (!string.IsNullOrWhiteSpace(precoTotal))
+                query = query.Where(m => (m.Produto.Preco * m.Quantidade).ToString().Contains(precoTotal));
+
+            // 🔁 Ordenação dinâmica
+            if (!string.IsNullOrEmpty(sortColumn))
+            {
+                sortOrder = sortOrder?.ToLower() == "desc" ? "desc" : "asc";
+
+                query = sortColumn.ToLower() switch
+                {
+                    "nomeproduto" => sortOrder == "asc"
+                        ? query.OrderBy(m => m.Produto.Nome)
+                        : query.OrderByDescending(m => m.Produto.Nome),
+
+                    "descricao" => sortOrder == "asc"
+                        ? query.OrderBy(m => m.Produto.Descricao)
+                        : query.OrderByDescending(m => m.Produto.Descricao),
+
+                    "quantidade" => sortOrder == "asc"
+                        ? query.OrderBy(m => m.Quantidade)
+                        : query.OrderByDescending(m => m.Quantidade),
+
+                    "preco_unitario" => sortOrder == "asc"
+                        ? query.OrderBy(m => m.Produto.Preco)
+                        : query.OrderByDescending(m => m.Produto.Preco),
+
+                    "preco_total" => sortOrder == "asc"
+                        ? query.OrderBy(m => m.Produto.Preco * m.Quantidade)
+                        : query.OrderByDescending(m => m.Produto.Preco * m.Quantidade),
+
+                    "tipomovimento" => sortOrder == "asc"
+                        ? query.OrderBy(m => m.TipoMovimento)
+                        : query.OrderByDescending(m => m.TipoMovimento),
+
+                    "datamovimento" => sortOrder == "asc"
+                        ? query.OrderBy(m => m.DataMovimento)
+                        : query.OrderByDescending(m => m.DataMovimento),
+
+                    _ => query.OrderByDescending(m => m.DataMovimento)
+                };
+            }
+            else
+            {
+                query = query.OrderByDescending(m => m.DataMovimento);
+            }
+
+            // 🔢 Paginação
+            var totalMovimentos = await query.CountAsync();
+            var movimentosBrutos = await query
                 .Skip((page - 1) * itensPorPagina)
                 .Take(itensPorPagina)
                 .ToListAsync();
@@ -42,8 +123,10 @@ namespace backend.Controllers
                 PrecoUnitario = m.Produto.Preco,
                 Quantidade = m.Quantidade,
                 TipoMovimento = char.ToUpper(m.TipoMovimento[0]) + m.TipoMovimento.Substring(1).ToLower(),
-                DataMovimento = TimeZoneInfo.ConvertTimeFromUtc(m.DataMovimento, fusoBrasil).ToString("dd/MM/yyyy HH:mm")
+                DataMovimento = TimeZoneInfo.ConvertTimeFromUtc(m.DataMovimento, fusoBrasil)
+                     .ToString("dd/MM/yyyy HH:mm")
             }).ToList();
+
 
             return Ok(new
             {
