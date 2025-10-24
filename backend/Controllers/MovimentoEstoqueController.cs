@@ -51,9 +51,6 @@ namespace backend.Controllers
             if (!string.IsNullOrWhiteSpace(tipoMovimento))
                 query = query.Where(m => EF.Functions.ILike(m.TipoMovimento, $"%{tipoMovimento}%"));
 
-            if (!string.IsNullOrWhiteSpace(data))
-                query = query.Where(m => m.DataMovimento.ToString("dd/MM/yyyy").Contains(data));
-
             if (!string.IsNullOrWhiteSpace(quantidade))
                 query = query.Where(m => m.Quantidade.ToString().Contains(quantidade));
 
@@ -71,17 +68,6 @@ namespace backend.Controllers
                 var precoTotalFiltro = precoTotal.Replace(',', '.');
                 if (decimal.TryParse(precoTotalFiltro, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var precoT))
                     query = query.Where(m => (m.Produto.Preco * m.Quantidade) == precoT);
-            }
-
-            // Filtro por data exata "dd/MM/yyyy HH:mm"
-            if (!string.IsNullOrWhiteSpace(data))
-            {
-
-                // Transformar a string de data do filtro em partes possíveis
-                query = query.Where(m =>
-                    TimeZoneInfo.ConvertTimeFromUtc(m.DataMovimento, fusoBrasil)
-                        .ToString("dd/MM/yyyy HH:mm")
-                        .Contains(data));
             }
 
             // 🔁 Ordenação dinâmica
@@ -133,6 +119,25 @@ namespace backend.Controllers
                 .Skip((page - 1) * itensPorPagina)
                 .Take(itensPorPagina)
                 .ToListAsync();
+
+            if (!string.IsNullOrWhiteSpace(data))
+            {
+                movimentosBrutos = movimentosBrutos
+                    .Where(m =>
+                    {
+                        var dataMov = TimeZoneInfo.ConvertTimeFromUtc(m.DataMovimento, fusoBrasil);
+                        var strFull = dataMov.ToString("dd/MM/yyyy HH:mm");
+                        var strDate = dataMov.ToString("dd/MM/yyyy");
+                        var strDayMonth = dataMov.ToString("dd/MM");
+                        var strTime = dataMov.ToString("HH:mm");
+
+                        return strFull.Contains(data) ||
+                               strDate.Contains(data) ||
+                               strDayMonth.Contains(data) ||
+                               strTime.Contains(data);
+                    })
+                    .ToList();
+            }
 
             var movimentos = movimentosBrutos.Select(m => new MovimentoEstoqueDto
             {
