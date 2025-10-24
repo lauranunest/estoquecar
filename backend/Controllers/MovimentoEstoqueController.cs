@@ -98,11 +98,11 @@ namespace backend.Controllers
                         ? query.OrderBy(m => m.Quantidade)
                         : query.OrderByDescending(m => m.Quantidade),
 
-                    "preco_unitario" => sortOrder == "asc"
+                    "precounitario" => sortOrder == "asc"
                         ? query.OrderBy(m => m.Produto.Preco)
                         : query.OrderByDescending(m => m.Produto.Preco),
 
-                    "preco_total" => sortOrder == "asc"
+                    "precototal" => sortOrder == "asc"
                         ? query.OrderBy(m => m.Produto.Preco * m.Quantidade)
                         : query.OrderByDescending(m => m.Produto.Preco * m.Quantidade),
 
