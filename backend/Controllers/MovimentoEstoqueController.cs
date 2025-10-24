@@ -54,13 +54,30 @@ namespace backend.Controllers
             if (!string.IsNullOrWhiteSpace(quantidade))
                 query = query.Where(m => m.Quantidade.ToString().Contains(quantidade));
 
-            // 🆕 Filtro por preço unitário
+            // Filtro por preço unitário
             if (!string.IsNullOrWhiteSpace(precoUnitario))
-                query = query.Where(m => m.Produto.Preco.ToString().Contains(precoUnitario));
+            {
+                var precoUnitarioFiltro = precoUnitario.Replace(',', '.');
+                if (decimal.TryParse(precoUnitarioFiltro, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var precoU))
+                    query = query.Where(m => m.Produto.Preco == precoU);
+            }
 
-            // 🆕 Filtro por preço total
+            // Filtro por preço total
             if (!string.IsNullOrWhiteSpace(precoTotal))
-                query = query.Where(m => (m.Produto.Preco * m.Quantidade).ToString().Contains(precoTotal));
+            {
+                var precoTotalFiltro = precoTotal.Replace(',', '.');
+                if (decimal.TryParse(precoTotalFiltro, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var precoT))
+                    query = query.Where(m => (m.Produto.Preco * m.Quantidade) == precoT);
+            }
+
+            // Filtro por data exata "dd/MM/yyyy HH:mm"
+            if (!string.IsNullOrWhiteSpace(data))
+            {
+                if (DateTime.TryParseExact(data, "dd/MM/yyyy HH:mm", null, System.Globalization.DateTimeStyles.None, out var dataFiltro))
+                {
+                    query = query.Where(m => m.DataMovimento == dataFiltro.ToUniversalTime());
+                }
+            }
 
             // 🔁 Ordenação dinâmica
             if (!string.IsNullOrEmpty(sortColumn))
