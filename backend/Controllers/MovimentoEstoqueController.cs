@@ -34,6 +34,9 @@ namespace backend.Controllers
     string? precoTotal = null
 )
         {
+
+            var fusoBrasil = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
+
             var query = _context.MovimentosEstoque
                 .Include(m => m.Produto)
                 .AsQueryable();
@@ -73,10 +76,12 @@ namespace backend.Controllers
             // Filtro por data exata "dd/MM/yyyy HH:mm"
             if (!string.IsNullOrWhiteSpace(data))
             {
-                if (DateTime.TryParseExact(data, "dd/MM/yyyy HH:mm", null, System.Globalization.DateTimeStyles.None, out var dataFiltro))
-                {
-                    query = query.Where(m => m.DataMovimento == dataFiltro.ToUniversalTime());
-                }
+
+                // Transformar a string de data do filtro em partes possíveis
+                query = query.Where(m =>
+                    TimeZoneInfo.ConvertTimeFromUtc(m.DataMovimento, fusoBrasil)
+                        .ToString("dd/MM/yyyy HH:mm")
+                        .Contains(data));
             }
 
             // 🔁 Ordenação dinâmica
@@ -128,8 +133,6 @@ namespace backend.Controllers
                 .Skip((page - 1) * itensPorPagina)
                 .Take(itensPorPagina)
                 .ToListAsync();
-
-            var fusoBrasil = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
 
             var movimentos = movimentosBrutos.Select(m => new MovimentoEstoqueDto
             {
