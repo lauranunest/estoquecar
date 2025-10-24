@@ -18,6 +18,8 @@ export class ProdutoComponent implements OnInit {
   descricao: string = '';
   preco: string = '';
   mensagem: string = '';
+  nomeBusca: string = '';
+  produtosFiltrados: any[] = [];
 
   constructor(private http: HttpClient) {}
 
@@ -25,8 +27,18 @@ export class ProdutoComponent implements OnInit {
     this.listarProdutos();
   }
 
+  formatarMoeda(event: any) {
+    let valor = event.target.value;
+    valor = valor.replace(/\D/g, '');
+    valor = (Number(valor) / 100).toFixed(2);
+    valor = valor.replace('.', ',');
+    event.target.value = 'R$ ' + valor;
+    this.preco = event.target.value;
+  }
+
   // CREATE
   criar(): void {
+    console.log(this.preco);
     const precoNumerico = parseFloat(
       this.preco.replace('R$', '').replace('.', '').replace(',', '.').trim()
     );
@@ -48,7 +60,6 @@ export class ProdutoComponent implements OnInit {
         next: (res: any) => {
           this.mensagem = res.mensagem;
           this.limparFormulario();
-          this.listarProdutos();
         },
         error: (err) =>
           (this.mensagem = err.error?.mensagem || 'Erro ao cadastrar produto.'),
@@ -64,15 +75,47 @@ export class ProdutoComponent implements OnInit {
       });
   }
 
-  buscarPorId(id: number): void {
+  buscarPorNome(nome: string) {
+    console.log('preco' + this.preco);
+    console.log('descricao' + this.descricao);
+    console.log('nome' + this.nome);
+    this.nomeBusca = nome;
+
+    if (!nome) {
+      this.produtosFiltrados = [];
+      this.produtoSelecionado = null;
+      return;
+    }
+
     this.http
-      .get(`https://estoquecar.onrender.com/api/produtos/${id}`)
-      .subscribe((res) => {
-        this.produtoSelecionado = res;
-        this.nome = (res as any).nome;
-        this.descricao = (res as any).descricao;
-        this.preco = 'R$ ' + (res as any).preco.toFixed(2).replace('.', ',');
+      .get<any[]>(
+        `https://estoquecar.onrender.com/api/produtos/buscar?nome=${nome}`
+      )
+      .subscribe({
+        next: (res) => {
+          this.produtosFiltrados = res;
+          this.produtoSelecionado = null;
+
+          const produtoExato = res.find((p) => p.nome === nome);
+          if (produtoExato) {
+            this.selecionarProduto(produtoExato);
+          } else {
+            this.produtoSelecionado = null;
+          }
+        },
+        error: (err) => {
+          this.produtosFiltrados = [];
+          this.produtoSelecionado = null;
+        },
       });
+  }
+
+  selecionarProduto(produto: any) {
+    this.produtoSelecionado = produto;
+    this.nome = produto.nome;
+    this.descricao = produto.descricao;
+    this.preco = 'R$ ' + produto.preco.toFixed(2).replace('.', ',');
+    this.produtosFiltrados = []; // fecha a dropdown
   }
 
   // UPDATE
@@ -112,13 +155,6 @@ export class ProdutoComponent implements OnInit {
         error: (err) =>
           (this.mensagem = err.error?.mensagem || 'Erro ao deletar produto.'),
       });
-  }
-
-  selecionarProduto(produto: any): void {
-    this.produtoSelecionado = produto;
-    this.nome = produto.nome;
-    this.descricao = produto.descricao;
-    this.preco = 'R$ ' + produto.preco.toFixed(2).replace('.', ',');
   }
 
   limparFormulario(): void {

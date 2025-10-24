@@ -300,3 +300,28 @@ select {
 .pagination {
   margin-top: 10px;
 }
+
+.filters input {
+  width: 95%;
+  padding: 5px;
+  font-size: 13px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  margin: 4px 0;
+}
+
+.filters input:focus {
+  border-color: #003366;
+  box-shadow: 0 0 3px rgba(0, 51, 102, 0.3);
+}
+
+th {
+  cursor: pointer;
+}
+
+th:hover {
+  background-color: #004080;
+  color: white;
+  transition: 0.2s;
+}

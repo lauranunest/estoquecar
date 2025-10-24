@@ -2,7 +2,6 @@
   <div class="content">
     <div class="container">
       <h2>Registrar Movimento de Estoque</h2>
-
       <form
         (ngSubmit)="registrarMovimento()"
         #movForm="ngForm"
@@ -54,13 +53,71 @@
       <table>
         <thead>
           <tr>
-            <th>Produto</th>
-            <th>Descrição</th>
-            <th>Preço Unitário</th>
-            <th>Quantidade</th>
-            <th>Preço Total</th>
-            <th>Tipo</th>
-            <th>Data</th>
+            <th (click)="ordenarPor('nomeProduto')">Produto ▲▼</th>
+            <th (click)="ordenarPor('descricao')">Descrição ▲▼</th>
+            <th (click)="ordenarPor('precoUnitario')">Preço Unitário ▲▼</th>
+            <th (click)="ordenarPor('quantidade')">Quantidade ▲▼</th>
+            <th (click)="ordenarPor('precoTotal')">Preço Total ▲▼</th>
+            <th (click)="ordenarPor('tipoMovimento')">Tipo ▲▼</th>
+            <th (click)="ordenarPor('dataMovimento')">Data ▲▼</th>
+          </tr>
+          <tr class="filters">
+            <th>
+              <input
+                type="text"
+                [(ngModel)]="filtros.nomeProduto"
+                (input)="aplicarFiltros()"
+                placeholder="Buscar produto..."
+              />
+            </th>
+            <th>
+              <input
+                type="text"
+                [(ngModel)]="filtros.descricao"
+                (input)="aplicarFiltros()"
+                placeholder="Buscar descrição..."
+              />
+            </th>
+            <th>
+              <input
+                type="text"
+                [(ngModel)]="filtros.precoUnitario"
+                (input)="aplicarFiltros()"
+                placeholder="Preço unitário..."
+              />
+            </th>
+            <th>
+              <input
+                type="text"
+                [(ngModel)]="filtros.quantidade"
+                (input)="aplicarFiltros()"
+                placeholder="Qtd..."
+              />
+            </th>
+            <th>
+              <input
+                type="text"
+                [(ngModel)]="filtros.precoTotal"
+                (input)="aplicarFiltros()"
+                placeholder="Preço total..."
+              />
+            </th>
+            <th>
+              <input
+                type="text"
+                [(ngModel)]="filtros.tipoMovimento"
+                (input)="aplicarFiltros()"
+                placeholder="Tipo..."
+              />
+            </th>
+            <th>
+              <input
+                type="text"
+                [(ngModel)]="filtros.data"
+                (input)="aplicarFiltros()"
+                placeholder="Data..."
+              />
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -77,13 +134,7 @@
             <td>{{ formatarPreco(movimento.precoUnitario) }}</td>
             <td>{{ movimento.quantidade }}</td>
             <td>{{ formatarPreco(movimento.precoTotal) }}</td>
-            <td>
-              {{
-                movimento.tipoMovimento === "Saida"
-                  ? "Saída"
-                  : movimento.tipoMovimento
-              }}
-            </td>
+            <td>{{ movimento.tipoMovimento }}</td>
             <td>{{ movimento.dataMovimento }}</td>
           </tr>
         </tbody>

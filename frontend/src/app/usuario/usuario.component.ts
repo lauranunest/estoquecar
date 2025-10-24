@@ -104,6 +104,7 @@ export class UsuarioComponent implements OnInit {
       .subscribe((res) => {
         this.usuarioSelecionado = res;
       });
+    console.log(this.email);
   }
 
   // UPDATE

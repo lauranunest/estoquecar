@@ -27,6 +27,19 @@ export class MovimentoEstoqueComponent implements OnInit {
   itensPorPagina: number = 5;
   paginasVisiveis: number[] = [];
 
+  filtros = {
+    nomeProduto: '',
+    descricao: '',
+    tipoMovimento: '',
+    data: '',
+    quantidade: '',
+    precoUnitario: '',
+    precoTotal: '',
+  };
+
+  sortColumn: string = '';
+  sortOrder: string = 'asc';
+
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
@@ -37,31 +50,53 @@ export class MovimentoEstoqueComponent implements OnInit {
   carregarProdutos() {
     this.http
       .get<any[]>('https://estoquecar.onrender.com/api/produtos')
-      .subscribe((data) => {
-        this.produtos = data;
-      });
+      .subscribe((data) => (this.produtos = data));
+  }
+
+  aplicarFiltros() {
+    this.paginaAtual = 1;
+    this.carregarMovimentos();
+  }
+
+  ordenarPor(coluna: string) {
+    if (this.sortColumn === coluna) {
+      this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortColumn = coluna;
+      this.sortOrder = 'asc';
+    }
+    this.carregarMovimentos();
   }
 
   carregarMovimentos() {
+    const params = new URLSearchParams({
+      page: this.paginaAtual.toString(),
+      itensPorPagina: this.itensPorPagina.toString(),
+      sortColumn: this.sortColumn,
+      sortOrder: this.sortOrder,
+      nomeProduto: this.filtros.nomeProduto,
+      descricao: this.filtros.descricao,
+      tipoMovimento: this.filtros.tipoMovimento,
+      data: this.filtros.data,
+      quantidade: this.filtros.quantidade,
+      precoUnitario: this.filtros.precoUnitario,
+      precoTotal: this.filtros.precoTotal,
+    });
+
     this.http
-      .get<any[]>(
-        `https://estoquecar.onrender.com/api/movimentoestoque?page=${this.paginaAtual}&itensPorPagina=${this.itensPorPagina}`
+      .get<any>(
+        `https://estoquecar.onrender.com/api/movimentoestoque?${params.toString()}`
       )
-      .subscribe((data: any) => {
-        this.movimentos = data.data.map((movimento: any) => {
-          movimento.dataMovimento = this.formatarDataMovimento(
-            movimento.dataMovimento
-          );
-          return movimento;
-        });
+      .subscribe((data) => {
+        this.movimentos = data.data;
         this.totalPaginas = data.totalPages;
+        this.atualizarPaginas();
       });
   }
 
   registrarMovimento() {
     if (
       !this.novoMovimento.produtoId ||
-      Number(this.novoMovimento.produtoId) <= 0 ||
       !this.novoMovimento.quantidade ||
       this.novoMovimento.quantidade < 1 ||
       !this.novoMovimento.tipoMovimento
@@ -72,16 +107,10 @@ export class MovimentoEstoqueComponent implements OnInit {
       return;
     }
 
-    const movimentoParaRegistrar = {
-      produtoId: this.novoMovimento.produtoId,
-      quantidade: this.novoMovimento.quantidade,
-      tipoMovimento: this.novoMovimento.tipoMovimento,
-    };
-
     this.http
       .post(
         'https://estoquecar.onrender.com/api/movimentoestoque',
-        movimentoParaRegistrar
+        this.novoMovimento
       )
       .subscribe({
         next: () => {
@@ -92,9 +121,7 @@ export class MovimentoEstoqueComponent implements OnInit {
             quantidade: null,
           };
         },
-        error: (error) => {
-          alert(error.error);
-        },
+        error: (error) => alert(error.error),
       });
   }
 
@@ -107,26 +134,18 @@ export class MovimentoEstoqueComponent implements OnInit {
 
   atualizarPaginas() {
     const paginas: number[] = [];
-
-    const mostrarPaginas = 3;
     const inicio = Math.max(1, this.paginaAtual - 1);
     const fim = Math.min(this.totalPaginas, this.paginaAtual + 1);
 
-    for (let i = inicio; i <= fim; i++) {
-      paginas.push(i);
-    }
-
+    for (let i = inicio; i <= fim; i++) paginas.push(i);
     if (fim < this.totalPaginas) {
       paginas.push(-1);
       paginas.push(this.totalPaginas);
     }
-
     if (inicio > 2) {
       paginas.unshift(-1);
       paginas.unshift(1);
-    } else if (inicio === 2) {
-      paginas.unshift(1);
-    }
+    } else if (inicio === 2) paginas.unshift(1);
 
     this.paginasVisiveis = paginas;
   }
@@ -143,11 +162,5 @@ export class MovimentoEstoqueComponent implements OnInit {
 
   formatarPreco(valor: number): string {
     return valor.toFixed(2).replace('.', ',');
-  }
-
-  formatarDataMovimento(data: string): string {
-    const [mes, dia, ano, hora, minuto] = data.split(/[\/ :]/);
-
-    return ` ${mes}/${dia}/${ano} ${hora}:${minuto}`;
   }
 }

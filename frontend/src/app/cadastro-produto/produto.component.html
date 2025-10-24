@@ -1,11 +1,28 @@
-<div class="form-container">
-  <h2>Produtos</h2>
+<div class="form-container cadastro-produto">
+  <h2>Produto</h2>
 
-  <div class="form-group">
+  <!-- Campo Nome com busca em tempo real -->
+  <div class="form-group" style="position: relative">
     <label class="label" for="nome">Nome</label>
-    <input type="text" id="nome" class="form-control" [(ngModel)]="nome" />
+    <input
+      type="text"
+      id="nome"
+      class="form-control"
+      [(ngModel)]="nome"
+      (ngModelChange)="buscarPorNome($event)"
+    />
+
+    <!-- Lista suspensa -->
+    <div class="search-results" *ngIf="produtosFiltrados.length > 0">
+      <ul>
+        <li *ngFor="let p of produtosFiltrados" (click)="selecionarProduto(p)">
+          {{ p.nome }} - R$ {{ p.preco.toFixed(2).replace(".", ",") }}
+        </li>
+      </ul>
+    </div>
   </div>
 
+  <!-- Campo Descrição -->
   <div class="form-group">
     <label class="label" for="descricao">Descrição</label>
     <textarea
@@ -15,11 +32,19 @@
     ></textarea>
   </div>
 
+  <!-- Campo Preço -->
   <div class="form-group">
-    <label class="label" for="preco">Preço</label>
-    <input type="text" id="preco" class="form-control" [(ngModel)]="preco" />
+    <label class="preco-label" for="preco">Preço</label>
+    <input
+      type="text"
+      id="preco"
+      class="form-control"
+      [(ngModel)]="preco"
+      (input)="formatarMoeda($event)"
+    />
   </div>
 
+  <!-- Botões -->
   <button
     *ngIf="!produtoSelecionado"
     (click)="criar()"
@@ -39,7 +64,7 @@
   <button
     *ngIf="produtoSelecionado"
     (click)="deletar(produtoSelecionado.id)"
-    style="margin-top: 10px; background-color: red; color: white; width: 100%"
+    class="btn-excluir"
   >
     Excluir
   </button>
